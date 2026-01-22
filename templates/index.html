@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My science Project</title>
+
+    <style>
+    h1 {text-align: center;}
+    body {text-align: center;}
+    div {text-align: center;}
+    </style>
+
+  </head>
+  <body>
+    <header>Science Project</header>
+
+        <p style="font-family: 'Comic Sans MS', 'Comic Sans', cursive;">
+            This text is in Comic Sans. 
+        </p>
+
+        <p style="color:rgb(187, 62, 62);">sjfhklshaljfd</p>
+
+        <div>
+        <form action="/upload" method="post" enctype="multipart/form-data" >
+            <label for="l_img">Select an Image:</label><br>
+            <input type="file" name="image" accept="image/*" required><br>
+            <button type="submit">Upload Image!</button>
+        </form> 
+        </div>
+
+        {% if result_image %}
+            <h2>Processed Image Returned:</h2>
+            <img src="{{result_image}}" width = "400">
+            <p>Random: {{color_determiner}}</p>
+        {% endif %}
+    </body>
+</html>
