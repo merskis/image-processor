@@ -29,7 +29,7 @@
 # 3. git add .
 # 4. git commit -m "your message"
 
-#5. git remote add origin ttps://github.com/merskis/image-processor.git
+#5. git remote add origin https://github.com/merskis/image-processor.git
 #git branch -M main
 #git push -u origin main
 
@@ -44,6 +44,15 @@
 ############################################################################
 # https://www.pythonanywhere.com/user/peepdroid/files/home/peepdroid
 
+
+############################################################################
+# Update code from github
+#############################################################
+# 1. Go to console in pythonanywhere
+# 2. cd /home/peepdroid/image-processor (main)
+# 3. git pull origin main
+# 4. pip install -r requirements.txt 
+# 5. Go to Python Anywhere and go to Web tab and reload the web app
 
 
 from flask import Flask, render_template, request
