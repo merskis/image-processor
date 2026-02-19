@@ -136,5 +136,27 @@ def upload():
 
     return render_template("index.html", result_image=result_path)
 
+
+
+# Route to delete all images in uploads and results folders
+@app.route("/delete-images", methods=["POST"])
+def delete_images():
+    deleted = 0
+    for folder in [UPLOAD_FOLDER, RESULT_FOLDER]:
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                    deleted += 1
+            except Exception as e:
+                print(f"Failed to delete {file_path}: {e}")
+    return render_template("adamparkzer.html", message=f"Deleted {deleted} images.")
+
+# Route to show the adamparkzer page
+@app.route("/adamparkzer")
+def adamparkzer():
+    return render_template("adamparkzer.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
