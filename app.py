@@ -1,16 +1,49 @@
 #########################################################################
 # Deployment Instructions:
 #########################################################################
-# 1. Start Server by opening cmd prompt in Windows. 
-# 2. cd C:\Projects\Science Project
-# 4.  python app.py 
+# 1. Activate Virtual Environment by going to cmd prompt in Windows. 
+# >> cd C:\Projects\Science Project\.venv\Scripts\
+# >> activate.bat
+# 2 Go back 2 directories to C:\Projects\Science Project
+# >> cd ..\..\ 
+# 3. Type: python app.py
+# 4. Open web browser and go to: http://127.0.0.1:5000/
+########################################################################
+# Quick Delpoyment Instructions
+######################################################################
+# cd C:\Projects\Science Project\.venv\Scripts\
+# activate.bat
+# cd ..\..\ 
+# python app.py
+###################################################################
+#How to deploy to Public Server (not for carter)
+##################################################################
+#1. https://www.youtube.com/watch?v=H2Hxu7fDUOc
 
 #########################################################################
 # Git Instructions:
+#https://github.com/merskis/image-processor.git
 #########################################################################
 # 1. Go to cmd prompt in Windows.
 # 2. cd C:\Projects\Science Project
 # 3. git add .
+# 4. git commit -m "your message"
+
+#5. git remote add origin ttps://github.com/merskis/image-processor.git
+#git branch -M main
+#git push -u origin main
+
+#6. Create Requirements.txt
+# pip freeze > requirements.txt
+# git add requirements.txt
+# git commit -m "Add requirements.txt"
+# git push
+
+############################################################################
+# URL Path to Public Server
+############################################################################
+# https://www.pythonanywhere.com/user/peepdroid/files/home/peepdroid
+
 
 
 from flask import Flask, render_template, request
@@ -21,34 +54,25 @@ import random
 
 app = Flask(__name__)
 
-color_determiner = random.randint(2, 5)
-
-
-
-if color_determiner == 1:
-    color = "red"
-if color_determiner == 2:
-    color = "orange"
-if color_determiner == 3:
-    color = "yellow"
-if color_determiner == 4:
-    color = "green"
-if color_determiner == 5:
-    color = "blue"
-if color_determiner == 6:
-    color = "purple"
-else:
-    color = "white"
-    
-
 UPLOAD_FOLDER = "static/uploads"
 RESULT_FOLDER = "static/results"
 
 @app.route("/")
+
+
+def home():
+    return render_template('index.html')
+
+
 def index():
     return render_template("index.html")
 
-
+@app.after_request
+def set_cache_headers(response):
+    response.cache_control.no_cache = True
+    response.cache_control.no_store = True
+    response.cache_control.max_age = 0
+    return response
 
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -74,31 +98,34 @@ def upload():
     
     draw = ImageDraw.Draw(overlay)
     
+    transparency = int(request.form.get("intensity", 100))
+    
     num_lines = 10000
     for _ in range(num_lines):
         red = random.randint(0, 255)
         green = random.randint(0, 255)
         blue = random.randint(0, 255)
+        tranperency = transparency
+        fractal_randomness = random.randint(0,5)    
         # Generate random start and end coordinates within image dimensions
-        x1 = random.randint(0, width)
-        y1 = random.randint(0, height)
-        x2 = random.randint(0, width)
-        y2 = random.randint(0, height)
+        x1 = random.randint(0, width+(fractal_randomness**2))
+        y1 = random.randint(0, height+100)
+        x2 = random.randint(0, width+100)
+        y2 = random.randint(0, height+100)
 
         # Choose a random color and width
         # line_color = random.choice(colors)
-        line_width = random.randint(1, 5) # Random width between 1 and 5 pixels
+        line_width = 1
 
         # Draw the line
-        draw.line([(x1, y1), (x2, y2)], fill=(red, green, blue, 100), width=line_width)
+        draw.line([(x1, y1), (x2, y2)], fill=(red, green, blue, tranperency), width=line_width)
 
 
     img = Image.alpha_composite(baseImage, overlay)
     #save
     img.save(result_path)
 
-    return render_template("index.html", result_image=result_path, color_determiner=color_determiner)
-
+    return render_template("index.html", result_image=result_path)
 
 if __name__ == "__main__":
     app.run(debug=True)
